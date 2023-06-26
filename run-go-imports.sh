@@ -10,6 +10,6 @@ if ! command -v goimports &> /dev/null ; then
     exit 1
 fi
 
-output="$(goimports -l -w "$@")"
+output="$(goimports -l -w -local code.byted.org,git.byted.org "$@")"
 echo "$output"
 [[ -z "$output" ]]
