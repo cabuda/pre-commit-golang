@@ -5,11 +5,16 @@ fail() {
   exit 1
 }
 
-# FILES=$(go list ./... | grep -v /vendor/) || fail
-# go test -timeout 30s -short -v ${FILES} || fail
+# 查找所有包含go.mod的子目录
+directories=$(find . -name "go.mod" -exec dirname {} \;)
 
-for file in $(find . -name "go.mod"); do
-    dir=$(dirname "$file")
-    cd "$dir"
-    go test -timeout 30s -short -v ./... || fail
+# 遍历每个子目录并执行命令
+for dir in $directories; do
+	echo -e "\e[31mExecuting command in directory: $dir\e[0m"
+	cd "$dir" || exit
+
+	go test -timeout 30s -short -v ./... || fail
+
+	cd - >/dev/null || exit
+	echo -e "\n"
 done
