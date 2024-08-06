@@ -2,4 +2,5 @@
 
 set -eu -o pipefail
 
-echo "$@" | xargs -n1 go generate
+FILES=$(go list ./...  | grep -v /vendor/)
+exec go generate $FILES
